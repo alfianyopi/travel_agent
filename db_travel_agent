@@ -1,0 +1,79 @@
+/* buat database */
+USE db_travel_agent;
+
+/* buat tabel */
+CREATE TABLE db_travel_agent.travel_agent ( travel_agent_id INT(5) NOT NULL AUTO_INCREMENT , travel_agent_name VARCHAR(20) NOT NULL , travel_agent_address VARCHAR(30) NULL DEFAULT NULL , PRIMARY KEY (travel_agent_id));
+CREATE TABLE db_travel_agent.supplier ( supplier_id INT(5) NOT NULL AUTO_INCREMENT , supplier_name VARCHAR(20) NOT NULL , supplier_address VARCHAR(30) NULL DEFAULT NULL , PRIMARY KEY (supplier_id));
+CREATE TABLE db_travel_agent.tour_package ( tour_package_id INT(5) NOT NULL AUTO_INCREMENT , destination VARCHAR(20) NOT NULL , package_type VARCHAR(20) NOT NULL , itinerary TEXT NOT NULL , hotel VARCHAR(20) NULL DEFAULT NULL , supplier_price INT(20) NOT NULL , travel_agent_price INT(20) NOT NULL , supplier_id INT(5) NOT NULL , travel_agent_id INT(5) NOT NULL , PRIMARY KEY (tour_package_id), FOREIGN KEY (supplier_id) REFERENCES supplier (supplier_id), FOREIGN KEY (travel_agent_id) REFERENCES travel_agent (travel_agent_id));
+CREATE TABLE db_travel_agent.customer ( username VARCHAR(15) NOT NULL , password VARCHAR(15) NOT NULL , first_name VARCHAR(15) NOT NULL , last_name VARCHAR(15) NOT NULL , address VARCHAR(30) NULL DEFAULT NULL , phone VARCHAR(15) NOT NULL , email_id VARCHAR(30) NOT NULL , PRIMARY KEY (username));
+CREATE TABLE db_travel_agent.credit_card ( card_number VARCHAR(15) NOT NULL , card_type VARCHAR(10) NOT NULL , expired DATE NOT NULL , username VARCHAR(15) NOT NULL , PRIMARY KEY (card_number), FOREIGN KEY (username) REFERENCES customer (username));
+CREATE TABLE db_travel_agent.order_table ( order_id INT(5) NOT NULL AUTO_INCREMENT , order_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , departure_day DATE NOT NULL , number_of_person INT(3) NOT NULL , payment_status BOOLEAN NOT NULL , tour_package_id INT(5) NOT NULL , username VARCHAR(15) NOT NULL , PRIMARY KEY (order_id), FOREIGN KEY (tour_package_id) REFERENCES tour_package (tour_package_id), FOREIGN KEY (username) REFERENCES customer (username));
+
+/* insert baris */
+INSERT INTO customer VALUES ("alfianyopi", PASSWORD("alfianyopi"), "alfian", "yopi", "bandung", 08999320363, "alfianfatchan@gmail.com");
+INSERT INTO customer VALUES ("doni", PASSWORD("rahasia"), "doni", "surya", "bandung", 089999111111, "donisurya@gmail.com");
+INSERT INTO supplier VALUES (NULL, "Travel Senang", "Jaksel");
+INSERT INTO supplier VALUES (NULL, "My Trip My Adv", "Jakpus");
+INSERT INTO supplier VALUES (NULL, "Trip Murah", "Bandung");
+INSERT INTO supplier VALUES (NULL, "Hobi Main", "Bandung");
+INSERT INTO supplier VALUES (NULL, "Bali Vacation", "Bali");
+INSERT INTO travel_agent VALUES (NULL, "Tripvisto", "Jakarta");
+INSERT INTO tour_package VALUES (NULL, "Bali", "Bali3d2n", "Multiday Tour", 
+"- Hari 1
+Dijemput di bandara
+- Hari 2
+Keliling Bali
+- Hari 3
+Pengantaran ke bandara", "Bintang 3", 1500000, 1600000, 1, 1);
+INSERT INTO tour_package VALUES (NULL, "Lombok", "Lombok3d2n", "Multiday Tour", 
+"- Hari 1
+Dijemput di bandara
+- Hari 2
+Keliling Bali
+- Hari 3
+Pengantaran ke bandara", "Bintang 3", 1500000, 1600000, 1, 1);
+INSERT INTO tour_package VALUES (NULL, "Bali", "Diving Bali", "Activity", "Bertemu dengan instruktur", NULL, 1500000, 1600000, 2, 1);
+INSERT INTO tour_package VALUES (NULL, "Lombok", "Jetpag", "Activity", "Bertemu dengan instruktur", NULL, 1500000, 1600000, 2, 1);
+INSERT INTO tour_package VALUES (NULL, "Bali", "Bali3d2n", "Multiday Tour", 
+"- Hari 1
+Dijemput di bandara
+- Hari 2
+Keliling Bali
+- Hari 3
+Pengantaran ke bandara", "Bintang 4", 2000000, 2100000, 1, 1);
+INSERT INTO tour_package VALUES (NULL, "Lombok", "Lombok3d2n", "Multiday Tour", 
+"- Hari 1
+Dijemput di bandara
+- Hari 2
+Keliling Bali
+- Hari 3
+Pengantaran ke bandara", "Bintang 4", 2000000, 2100000, 1, 1);
+INSERT INTO tour_package VALUES (NULL, "Bali", "Diving Bali", "Activity", "Bertemu dengan instruktur", NULL, 1500000, 1600000, 2, 1);
+INSERT INTO tour_package VALUES (NULL, "Lombok", "Jetpag", "Activity", "Bertemu dengan instruktur", NULL, 1500000, 1600000, 2, 1);
+INSERT INTO credit_card VALUES ("456788987654", "Gold", "2018-01-31", "alfianyopi");
+INSERT INTO credit_card VALUES ("433222222222", "Silver", "2018-01-31", "doni");
+INSERT INTO order_table VALUES (NULL, CURRENT_TIMESTAMP, "2016-02-06", 5, 0, 2, "alfianyopi");
+INSERT INTO order_table VALUES (NULL, CURRENT_TIMESTAMP, "2016-02-06", 2, 0, 3, "doni");
+INSERT INTO order_table VALUES (NULL, CURRENT_TIMESTAMP, "2016-02-06", 8, 0, 2, "alfianyopi");
+
+/* panggil database */
+/* menampilkan masing-masing tabel */
+SELECT * FROM 
+SELECT * FROM travel_agent;
+SELECT * FROM supplier;
+SELECT * FROM tour_package;
+SELECT * FROM customer;
+SELECT * FROM credit_card;
+SELECT * FROM order_table;
+/* menampilkan invoice semua customer */
+SELECT order_id, order_time, departure_day, number_of_person, payment_status, travel_agent_price AS payment_per_person, travel_agent_price*number_of_person AS total_payment FROM tour_package JOIN order_table ON tour_package.tour_package_id=order_table.tour_package_id; 
+/* menampilkan semua paket liburan disertai supplier dan travel agent */
+SELECT tour_package_id, destination, package_name, package_type, itinerary, hotel, supplier_price, travel_agent_price, supplier_name, travel_agent_name FROM tour_package JOIN supplier JOIN travel_agent ON tour_package.supplier_id=supplier.supplier_id AND tour_package.travel_agent_id=travel_agent.travel_agent_id;
+/* menampilkan orderan customer alfianyopi */
+SELECT customer.username, order_id, order_time, departure_day, itinerary, number_of_person, payment_status, travel_agent_price AS payment_per_person, travel_agent_price*number_of_person AS total_payment FROM tour_package JOIN order_table JOIN customer ON order_table.username=customer.username AND tour_package.tour_package_id=order_table.tour_package_id where customer.username="alfianyopi";
+/* menampilkan harga diskon jika number_of_person banyak */
+SELECT order_id, order_time, departure_day, number_of_person, payment_status, travel_agent_price AS payment_per_person FROM tour_package JOIN order_table ON tour_package.tour_package_id=order_table.tour_package_id WHERE order_table.number_of_person<=4 
+UNION
+SELECT order_id, order_time, departure_day, number_of_person, payment_status, travel_agent_price-50000 AS payment_per_person FROM tour_package JOIN order_table ON tour_package.tour_package_id=order_table.tour_package_id WHERE order_table.number_of_person>4 AND order_table.number_of_person<=8 
+UNION
+SELECT order_id, order_time, departure_day, number_of_person, payment_status, travel_agent_price-2*50000 AS payment_per_person FROM tour_package JOIN order_table ON tour_package.tour_package_id=order_table.tour_package_id WHERE order_table.number_of_person>4 AND order_table.number_of_person>8;
