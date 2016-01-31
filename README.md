@@ -22,6 +22,6 @@
 
 ==== Cara Pakai ====
 
-1. Gunakan MySQL untuk menjalankan
+1. Disediakan SQL untuk dua aplikasi yaitu MySQL dan MySQL XAMPP untuk menjalankan
 2. Gambar erd terlampir
 3. Jangan lupa commit
