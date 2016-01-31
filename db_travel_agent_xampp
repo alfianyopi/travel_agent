@@ -1,0 +1,259 @@
+-- phpMyAdmin SQL Dump
+-- version 4.5.1
+-- http://www.phpmyadmin.net
+--
+-- Host: 127.0.0.1
+-- Generation Time: 31 Jan 2016 pada 19.47
+-- Versi Server: 10.1.9-MariaDB
+-- PHP Version: 5.6.15
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `db_travel_agent`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `credit_card`
+--
+
+CREATE TABLE `credit_card` (
+  `card_number` varchar(15) NOT NULL,
+  `card_type` varchar(10) NOT NULL,
+  `expired` date NOT NULL,
+  `username` varchar(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `credit_card`
+--
+
+INSERT INTO `credit_card` (`card_number`, `card_type`, `expired`, `username`) VALUES
+('433222222222', 'Silver', '2018-01-31', 'doni'),
+('456788987654', 'Gold', '2018-01-31', 'alfianyopi');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `customer`
+--
+
+CREATE TABLE `customer` (
+  `username` varchar(15) NOT NULL,
+  `password` varchar(15) NOT NULL,
+  `first_name` varchar(15) NOT NULL,
+  `last_name` varchar(15) NOT NULL,
+  `address` varchar(30) DEFAULT NULL,
+  `phone` varchar(15) NOT NULL,
+  `email_id` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `customer`
+--
+
+INSERT INTO `customer` (`username`, `password`, `first_name`, `last_name`, `address`, `phone`, `email_id`) VALUES
+('alfianyopi', '*50F4E00C1EBF01', 'alfian', 'yopi', 'bandung', '08999320363', 'alfianfatchan@gmail.com'),
+('doni', '*3E5287812B7D1F', 'doni', 'surya', 'bandung', '089999111111', 'donisurya@gmail.com');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `order_table`
+--
+
+CREATE TABLE `order_table` (
+  `order_id` int(5) NOT NULL,
+  `order_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `departure_day` date NOT NULL,
+  `number_of_person` int(3) NOT NULL,
+  `payment_status` tinyint(1) NOT NULL,
+  `tour_package_id` int(5) NOT NULL,
+  `username` varchar(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `order_table`
+--
+
+INSERT INTO `order_table` (`order_id`, `order_time`, `departure_day`, `number_of_person`, `payment_status`, `tour_package_id`, `username`) VALUES
+(1, '2016-01-31 23:11:54', '2016-02-06', 5, 0, 2, 'alfianyopi'),
+(2, '2016-01-31 23:14:40', '2016-02-06', 2, 0, 3, 'doni'),
+(3, '2016-02-01 00:00:32', '2016-02-06', 8, 0, 2, 'alfianyopi');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `supplier`
+--
+
+CREATE TABLE `supplier` (
+  `supplier_id` int(5) NOT NULL,
+  `supplier_name` varchar(20) NOT NULL,
+  `supplier_address` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `supplier`
+--
+
+INSERT INTO `supplier` (`supplier_id`, `supplier_name`, `supplier_address`) VALUES
+(1, 'Travel Senang', 'Jaksel'),
+(2, 'My Trip My Adv', 'Jakpus'),
+(3, 'Trip Murah', 'Jakarta'),
+(4, 'Hobi Main', 'Bandung'),
+(5, 'Bali Vacation', 'Bali');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tour_package`
+--
+
+CREATE TABLE `tour_package` (
+  `tour_package_id` int(5) NOT NULL,
+  `destination` varchar(20) NOT NULL,
+  `package_name` varchar(20) NOT NULL,
+  `package_type` varchar(20) NOT NULL,
+  `itinerary` text NOT NULL,
+  `hotel` varchar(20) DEFAULT NULL,
+  `supplier_price` int(20) NOT NULL,
+  `travel_agent_price` int(20) NOT NULL,
+  `supplier_id` int(5) NOT NULL,
+  `travel_agent_id` int(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `tour_package`
+--
+
+INSERT INTO `tour_package` (`tour_package_id`, `destination`, `package_name`, `package_type`, `itinerary`, `hotel`, `supplier_price`, `travel_agent_price`, `supplier_id`, `travel_agent_id`) VALUES
+(2, 'Bali', 'Bali3d2n', 'Multiday Tour', '- Hari 1\r\nDijemput di bandara\r\n- Hari 2\r\nKeliling Bali\r\n- Hari 3\r\nPengantaran ke bandara', 'Bintang 3', 1500000, 1600000, 1, 1),
+(3, 'Lombok', 'Lombok3d2n', 'Multiday Tour', '- Hari 1\r\nDijemput di bandara\r\n- Hari 2\r\nKeliling Bali\r\n- Hari 3\r\nPengantaran ke bandara', 'Bintang 3', 1500000, 1600000, 1, 1),
+(6, 'Bali', 'Diving Bali', 'Activity', 'Bertemu dengan instruktur', NULL, 1500000, 1600000, 1, 1),
+(7, 'Lombok', 'Jetpag', 'Activity', 'Bertemu dengan instruktur', NULL, 1500000, 1600000, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `travel_agent`
+--
+
+CREATE TABLE `travel_agent` (
+  `travel_agent_id` int(5) NOT NULL,
+  `travel_agent_name` varchar(20) NOT NULL,
+  `travel_agent_address` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `travel_agent`
+--
+
+INSERT INTO `travel_agent` (`travel_agent_id`, `travel_agent_name`, `travel_agent_address`) VALUES
+(1, 'Tripvisto', 'Jakarta');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `credit_card`
+--
+ALTER TABLE `credit_card`
+  ADD PRIMARY KEY (`card_number`),
+  ADD KEY `username` (`username`);
+
+--
+-- Indexes for table `customer`
+--
+ALTER TABLE `customer`
+  ADD PRIMARY KEY (`username`);
+
+--
+-- Indexes for table `order_table`
+--
+ALTER TABLE `order_table`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `tour_package_id` (`tour_package_id`),
+  ADD KEY `username` (`username`);
+
+--
+-- Indexes for table `supplier`
+--
+ALTER TABLE `supplier`
+  ADD PRIMARY KEY (`supplier_id`);
+
+--
+-- Indexes for table `tour_package`
+--
+ALTER TABLE `tour_package`
+  ADD PRIMARY KEY (`tour_package_id`),
+  ADD KEY `supplier_id` (`supplier_id`),
+  ADD KEY `travel_agent_id` (`travel_agent_id`);
+
+--
+-- Indexes for table `travel_agent`
+--
+ALTER TABLE `travel_agent`
+  ADD PRIMARY KEY (`travel_agent_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `order_table`
+--
+ALTER TABLE `order_table`
+  MODIFY `order_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `supplier`
+--
+ALTER TABLE `supplier`
+  MODIFY `supplier_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `tour_package`
+--
+ALTER TABLE `tour_package`
+  MODIFY `tour_package_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `travel_agent`
+--
+ALTER TABLE `travel_agent`
+  MODIFY `travel_agent_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
+
+--
+-- Ketidakleluasaan untuk tabel `credit_card`
+--
+ALTER TABLE `credit_card`
+  ADD CONSTRAINT `credit_card_ibfk_1` FOREIGN KEY (`username`) REFERENCES `customer` (`username`);
+
+--
+-- Ketidakleluasaan untuk tabel `order_table`
+--
+ALTER TABLE `order_table`
+  ADD CONSTRAINT `order_table_ibfk_1` FOREIGN KEY (`tour_package_id`) REFERENCES `tour_package` (`tour_package_id`),
+  ADD CONSTRAINT `order_table_ibfk_2` FOREIGN KEY (`username`) REFERENCES `customer` (`username`);
+
+--
+-- Ketidakleluasaan untuk tabel `tour_package`
+--
+ALTER TABLE `tour_package`
+  ADD CONSTRAINT `tour_package_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`supplier_id`),
+  ADD CONSTRAINT `tour_package_ibfk_2` FOREIGN KEY (`travel_agent_id`) REFERENCES `travel_agent` (`travel_agent_id`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
